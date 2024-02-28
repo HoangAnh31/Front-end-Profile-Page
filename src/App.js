@@ -1,23 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import InfoProfile from "./Components/InfoProfile";
+import Form from "./Components/Form";
+import { DataProvider } from "./Hooks/DataContext";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="lg:flex lg:justify-between lg:max-w-[1200px] lg:my-0 lg:mx-auto">
+      <div className="px-3 box-border lg:w-[50%]  lg:px-0">
+        <DataProvider>
+          <InfoProfile></InfoProfile>
+        </DataProvider>
+      </div>
+      <div className="px-3 box-border mt-8 lg:w-[50%] lg:mt-28 lg:px-12 lg:box-border ">
+        <Form></Form>
+      </div>
     </div>
   );
 }
