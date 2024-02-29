@@ -5,9 +5,10 @@ import Input from "../UI/Input";
 import { useData } from "../Hooks/DataContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import avatarDefault from "../imgs/avatar.png";
 
 const Form = () => {
-  const { objFile } = useData();
+  const { objFile, image } = useData();
 
   const notifySuccess = (message) => {
     toast.success(message, {
@@ -21,19 +22,36 @@ const Form = () => {
     });
   };
 
-  const handleUploadImage = async () => {
-    const fromData = new FormData();
-    fromData.append("image", objFile);
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 3000, // Auto-close the notification after 3000 milliseconds (3 seconds)
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
-    try {
-      const response = await fetch("http://localhost:8000/upload", {
-        method: "POST",
-        body: fromData,
-      });
-      const data = await response.json();
-      notifySuccess(data.message);
-    } catch (error) {
-      console.error("Error uploading image:", error);
+  const handleUploadImage = async () => {
+    if (image === avatarDefault) {
+      notifyError("Please don't use the default avatar, choose another one!!!");
+      return;
+    } else {
+      const fromData = new FormData();
+      fromData.append("image", objFile);
+
+      try {
+        const response = await fetch("http://localhost:8000/upload", {
+          method: "POST",
+          body: fromData,
+        });
+        const data = await response.json();
+        notifySuccess(data.message);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
   };
   return (
