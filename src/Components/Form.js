@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Form = () => {
-  const { image } = useData();
+  const { objFile } = useData();
 
   const notifySuccess = (message) => {
     toast.success(message, {
@@ -23,7 +23,8 @@ const Form = () => {
 
   const handleUploadImage = async () => {
     const fromData = new FormData();
-    fromData.append("image", image);
+    fromData.append("image", objFile);
+
     try {
       const response = await fetch("http://localhost:8000/upload", {
         method: "POST",

@@ -1,12 +1,26 @@
 import React, { useRef } from "react";
 import { useData } from "../Hooks/DataContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FileUpLoadButton = () => {
   const fileInputRef = useRef(null);
-  const { setImageData } = useData();
+  const { setImageData, setObjFileImage } = useData();
 
   const handleClick = () => {
     fileInputRef.current.click();
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 3000, // Auto-close the notification after 3000 milliseconds (3 seconds)
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   const handleFileChange = (event) => {
@@ -14,12 +28,17 @@ const FileUpLoadButton = () => {
 
     if (!fileObj) return;
 
-    const reader = new FileReader();
+    if (fileObj.type.startsWith("image/")) {
+      const reader = new FileReader();
 
-    reader.readAsDataURL(fileObj);
-    reader.onloadend = () => {
-      setImageData(reader.result);
-    };
+      reader.readAsDataURL(fileObj);
+      reader.onloadend = () => {
+        setImageData(reader.result);
+      };
+      setObjFileImage(fileObj);
+    } else {
+      notifyError("This file is not image file. Please choose again!!!");
+    }
   };
 
   return (
