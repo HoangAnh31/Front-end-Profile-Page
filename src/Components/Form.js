@@ -2,8 +2,39 @@ import React from "react";
 import Heading from "../UI/Heading";
 import Button from "../UI/Button";
 import Input from "../UI/Input";
+import { useData } from "../Hooks/DataContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Form = () => {
+  const { image } = useData();
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 3000, // Auto-close the notification after 3000 milliseconds (3 seconds)
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const handleUploadImage = async () => {
+    const fromData = new FormData();
+    fromData.append("image", image);
+    try {
+      const response = await fetch("http://localhost:8000/upload", {
+        method: "POST",
+        body: fromData,
+      });
+      const data = await response.json();
+      notifySuccess(data.message);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
   return (
     <>
       <div className="relative">
@@ -16,6 +47,7 @@ const Form = () => {
           <Button
             name="save"
             className="uppercase text-sm rounded-[7px] min-w-[95px] px-3 text-white "
+            handleSave={handleUploadImage}
           ></Button>
         </div>
       </div>
